@@ -1,77 +1,56 @@
-# React + TypeScript + Vite
+# EmailCostCalc
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+EmailCostCalc is a React + TypeScript calculator that estimates Amazon SES emailing costs (outbound, inbound, attachments, and dedicated IP add-ons). It is built with Vite and Tailwind, which makes it easy to run locally and now just as easy to deploy on Vercel.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Node.js 20+](https://nodejs.org/en/download) (Vercel also uses Node 20 by default)
+- pnpm/npm (the project currently uses npm via the `package-lock.json`)
+- [Vercel CLI](https://vercel.com/docs/cli) if you want to deploy from your machine
 
-## React Compiler
+Install dependencies:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Local development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
-# SES-Calculator
-# EmailCostCalc
-# EmailCostCalc
-# EmailCostCalc
+
+This starts Vite with hot module reloading at `http://localhost:5173`. ESLint and TypeScript configs are already set up:
+
+```bash
+npm run lint
+npm run build    # Type-checks via tsc -b and outputs to dist/
+```
+
+## Deploying to Vercel
+
+The repo includes a `vercel.json` configured for a static build with SPA-style routing:
+
+- `@vercel/static-build` runs `npm run vercel-build` (which simply delegates to `npm run build`).
+- The build output is the Vite `dist/` directory.
+- A catch-all route rewrites back to `index.html` so client-side routing keeps working on hard refreshes.
+
+### Quick start (with Vercel CLI)
+
+```bash
+vercel login
+vercel link        # select or create the Vercel project
+vercel --prod      # first deployment
+```
+
+The CLI will detect `vercel.json`, call `npm run vercel-build`, and upload the generated `dist/` assets.
+
+### Deploy from GitHub
+
+1. Push this repository to GitHub (or another Git provider) and import it in the Vercel dashboard.
+2. Framework preset: **Vite**.
+3. Build command: `npm run vercel-build`
+4. Output directory: `dist`
+5. Trigger a production deployment from the Vercel dashboard.
+
+That is all that is needed—no extra environment variables or serverless functions are required for this static calculator.
